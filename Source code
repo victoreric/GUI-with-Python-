@@ -1,0 +1,113 @@
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QToolTip, QMessageBox, QWidget, QAction
+from PyQt5.QtCore import QDateTime, QDate, QTime, Qt, QCoreApplication
+
+import sys
+
+class Window(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.title = "PyQt5 Window"  # add atribute window
+        self.top = 100
+        self.left = 100
+        self.width = 680
+        self.height = 500
+        self.setWindowIcon(QtGui.QIcon("icon.png")) # add icon
+
+        # created button and tool tip
+        button = QPushButton("Click Me", self)  # add button
+        button.move(0, 30)  # position button
+        button.setToolTip("<h3>This is Click Button")  # tooltip
+
+        buttonclose = QPushButton("Close", self)  # add buttonclose
+        buttonclose.move(0, 60)
+        buttonclose.clicked.connect(self.close)  # keyword close application
+
+
+        buttonwarning = QPushButton("Warning", self) # add button warning close
+        buttonwarning.move(0,100)
+        buttonwarning.clicked.connect(self.CloseApp)
+
+
+        buttonAbout = QPushButton ("About Me", self)
+        buttonAbout.move(0,180)
+        buttonAbout.clicked.connect(self.AboutMessage)
+
+        buttonSubscribe = QPushButton ("Subscribe Message", self)
+        # buttonSubscribe.move(0,140)  # moving
+        buttonSubscribe.setGeometry(0,140,160,30) # moving and resize
+        buttonSubscribe.clicked.connect(self.QuestionMessage)
+
+
+        self.InitWindow() # important
+
+    # method for calling attribute
+    def InitWindow(self):
+
+        # Menu Bar
+        mainMenu = self.menuBar() # keyword add menu
+        mainMenu.setNativeMenuBar(False) # just for macbook
+        FileMenu = mainMenu.addMenu("File")  # add menu utama
+        viewMenu = mainMenu.addMenu("View")
+        editMenu = mainMenu.addMenu("Edit")
+        searchMenu = mainMenu.addMenu("Search")
+        toolMenu = mainMenu.addMenu("Tool")
+        helpMenu = mainMenu.addMenu("Help")
+
+        exitButton = QAction("Exit", self) # add button exit
+        exitButton.setShortcut("Ctrl+E")   # add shortcut
+        exitButton.setStatusTip("Exit Application")
+        exitButton.triggered.connect(self.close)  # keyword exit
+        FileMenu.addAction(exitButton) # put button exit under file
+
+
+
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.top, self.left,self.width,self.height)
+
+        self.show() # important
+
+    def Close(self):   # method close, associated with buttonclose
+            QCoreApplication.instance().Quit()
+
+    def CloseApp(self): # method warning,associated with buttonwarning
+        Reply = QMessageBox.question(self,"Close Message", " Are Sure to Close Window....??",
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if Reply == QMessageBox.Yes :
+            self.close()
+
+    def AboutMessage(self):
+        QMessageBox.about(self, "About Message", "This is About Message Box")
+
+    def QuestionMessage(self):
+        Message = QMessageBox.question(self, "Question Message","Have You Sebsribed My Channel ??",
+                                       QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if Message == QMessageBox.Yes:
+            print("Yes, I Have Subscribed")
+        else :
+            print("No, I Have Not Subscribed")
+
+
+# print date and time in consule
+datetime = QDateTime.currentDateTime()
+print((datetime.toString()))
+print(datetime.toString(Qt.ISODate))
+print(datetime.toString(Qt.DefaultLocaleLongDate))
+
+date = QDate.currentDate()
+print(date.toString())
+print(date.toString(Qt.ISODate))
+
+time = QTime.currentTime()
+print(time.toString())
+print(time.toString(Qt.DefaultLocaleLongDate))
+# end  print date and time in consule
+
+
+
+
+App = QApplication(sys.argv) # important
+window = Window()   # important
+sys.exit(App.exec_())   # important
+
